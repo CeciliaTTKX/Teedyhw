@@ -28,6 +28,13 @@ angular.module('docs',
         }
       }
     })
+
+    .state('registration', {
+      url: '/registration',
+      templateUrl: 'partial/docs/registration.html',
+      controller: 'RegistrationCtrl'
+    })
+    
     .state('passwordreset', {
       url: '/passwordreset/:key',
       views: {

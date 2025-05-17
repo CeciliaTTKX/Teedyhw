@@ -49,6 +49,37 @@ angular.module('docs').controller('Login', function(Restangular, $scope, $rootSc
     });
   };
 
+  // 引入必要的依赖，确保有 $uibModal 等
+  $scope.openRegister = function() {
+    console.log("进入注册界面");
+    $uibModal.open({
+        templateUrl: 'partial/docs/registration.html',
+        controller: 'ModalRegister'
+    }).result.then(function (user) {
+        if (user === null) {
+            return;
+        }
+
+        // Send a register request
+        Restangular.one('user').put({
+            username: user.username,
+            password: user.password,
+            email: user.email,
+            storage_quota: 0 // 可以根据实际情况设置默认值
+        }).then(function () {
+            var title = $translate.instant('login.register_success_title');
+            var msg = $translate.instant('login.register_success_message', { username: user.username });
+            var btns = [{result: 'ok', label: $translate.instant('ok'), cssClass: 'btn-primary'}];
+            $dialog.messageBox(title, msg, btns);
+        }, function () {
+            var title = $translate.instant('login.register_error_title');
+            var msg = $translate.instant('login.register_error_message');
+            var btns = [{result: 'ok', label: $translate.instant('ok'), cssClass: 'btn-primary'}];
+            $dialog.messageBox(title, msg, btns);
+        });
+    });
+  };
+
   // Password lost
   $scope.openPasswordLost = function () {
     $uibModal.open({
